@@ -1,0 +1,962 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>SIG ESSAOUIRA</title>
+    <meta
+      name="viewport"
+      content="initial-scale=1.0, user-scalable=no, width=device-width"
+    />
+    <link rel="stylesheet" href="./lib/v6.2.1-dist/ol.css" />
+    <script type="text/javascript" src="./lib/v6.2.1-dist/ol.js"></script>
+    <link rel="stylesheet" href="./lib/ol-ext-master/dist/ol-ext.css" />
+    <script
+      type="text/javascript"
+      src="./lib/ol-ext-master/dist/ol-ext.js"
+    ></script>
+    <link rel="stylesheet" href="./style.css" />
+    <!-- jQuery -->
+    <script
+      type="text/javascript"
+      src="https://code.jquery.com/jquery-1.11.0.min.js"
+    ></script>
+    <!-- FontAwesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+  </head>
+  <body>
+    <div id="layerswitcher"></div>
+    <div id="js-map">
+      
+    </div>
+
+    <!--content of menu popup-->
+
+    <div id="menu">
+      <h1>Infos</h1>
+      <div class="NOM"></div>
+      <p style="border-bottom: 1px solid #999"></p>
+      <span class="categorie"> </span>
+
+      <span class="venue"></span>
+
+      <span class="commune"></span>
+      <span class="responsable"></span>
+      <span class="num"></span>
+
+      <div class="data"></div>
+    </div>
+
+    <!--SIDEBAR -->
+    <div id="sidebar">
+      <div class="tab">
+        <button class="tablinks" onclick="openCity(event, 'Search')">
+          <i class="fa fa-search"></i>
+        </button>
+        <button
+          class="tablinks"
+          onclick="openCity(event, 'JeDecouvre')"
+          id="defaultOpen"
+        >
+          <p class="monTexte">Je découvre</p>
+        </button>
+        <button class="tablinks" onclick="openCity(event, 'JeSejourne')">
+          <p class="monTexte">Je séjourne</p>
+        </button>
+        <button class="tablinks" onclick="openCity(event, 'JeDeguste')">
+          <p class="monTexte">Je déguste</p>
+        </button>
+        <button class="tablinks" onclick="openCity(event, 'JePratique')">
+          <p class="monTexte">Je pratique</p>
+        </button>
+      </div>
+      <div id="Search" class="tabcontent">
+        <div class="options">
+          <h2>Options:</h2>
+          <ul>
+            <li>
+              Max Inputs:
+              <input
+                type="number"
+                onchange="search.set('maxItems', Number(this.value));"
+                style="width: 3em"
+                value="10"
+              />
+            </li>
+
+              Attribut de recherche:
+              <select
+                onchange="search.set('property',this.value); search.search();"
+              >
+              <option value="NOM">Nom du point d'intérêt</option>
+              <option value="Nom responsable">Nom responsable</option> 
+              </select>
+            </li>
+          </ul>
+          <i
+            >Utiliser le search control pour effectuer une nouvelle
+            recherche.</i
+          >
+        </div>
+      </div>
+
+      <div id="JeDecouvre" class="tabcontent">
+        <button class="accordion">Site Naturel</button>
+        <div class="panel">
+          <p>
+            <br />
+            <label
+              ><input type="radio" name="NOME" value="Plage " /> Plage
+            </label>
+            <br />
+            <br />
+            <label
+              ><input type="radio" name="NOME" value="Source" /> Source
+            </label>
+            <br />
+            <br />
+            <label
+              ><input
+                type="radio"
+                name="NOME"
+                value="Montagne"
+              />Montagne</label
+            >
+            <br />
+            <br />
+            <label
+              ><input
+                type="radio"
+                name="NOME"
+                value="Grotte"
+              />
+              Grotte
+            </label>
+            <br />
+            <br />
+            <label><input type="radio" name="NOME" value="Lac" /> Lac </label>
+            <br />
+            <br />
+            <label
+              ><input type="radio" name="NOME" value="Riviï¿½re" /> Rivière
+            </label>
+            <br />
+            <br />
+            <label
+              ><input type="radio" name="NOME" value="Cascade" /> Cascade
+            </label>
+            <br />
+            <br />
+            <label
+              ><input type="radio" name="NOME" value="Forêt" /> Forêt
+            </label>
+            <br />
+          </p>
+        </div>
+        <button class="accordion">Point d'intérêt touristique</button>
+        <div class="panel">
+          <p>
+            <br />
+            <label
+              ><input type="radio" name="NOME" value="Moussem" /> Moussem</label
+            >
+            <br />
+            <br />
+            <label><input type="radio" name="NOME" value="Souk" /> Souk</label>
+            <br />
+            <br />
+            <label
+              ><input type="radio" name="NOME" value="Jardin" /> Jardin</label
+            >
+            <br />
+          </p>
+          <!-- <button
+            id="addCql"
+            class="button"
+            style="vertical-align: middle"
+            
+          >
+            <span>Filtrer</span>
+          </button>
+          <button id="reset" style="font-size:12px"><i class="fa fa-close"></i></button>-->
+        </div>
+
+        <button class="accordion">Point d'intérêt culturel</button>
+        <div class="panel">
+          <p>
+            <br />
+            <label
+              ><input type="radio" name="NOME" value="Festival" />
+              Festival</label
+            >
+            <br />
+            <br />
+            <label
+              ><input type="radio" name="NOME" value="Musï¿½e" /> Musée</label
+            >
+            <br />
+          </p>
+        </div>
+
+        <button class="accordion">Point d'intérêt historique</button>
+        <div class="panel">
+          <p>
+            <br />
+            <label
+              ><input
+                type="radio"
+                name="NOME"
+                value="Monument"
+              />Monument</label
+            >
+            <br />
+            <br />
+            <label
+              ><input
+                type="radio"
+                name="NOME"
+                value="Sites"
+              />Sites archéologiques</label
+            >
+            <br />
+            <br />
+            <label
+              ><input
+                type="radio"
+                name="NOME"
+                value="Sanctuaire / Marabout"
+              />Sanctuaire / Marabout</label
+            >
+            <br />
+            <br />
+            <label
+              ><input type="radio" name="NOME" value="Zaouï¿½a" />Zaouïa</label
+            >
+            <br />
+          </p>
+        </div>
+      </div>
+
+      <div id="JeSejourne" class="tabcontent">
+        <br />
+        <label><input type="radio" name="NOME" value="Hï¿½tel" />Hôtel</label>
+        <br />
+        <br />
+        <label><input type="radio" name="NOME" value="Camping" />Camping</label>
+        <br />
+        <br />
+        <label><input type="radio" name="NOME" value="Refuge" />Refuge</label>
+        <br />
+        <br />
+        <label
+          ><input type="radio" name="NOME" value="Ecogîtes" />Écogîtes /
+          Ecolodges</label
+        >
+        <br />
+        <br />
+        <label
+          ><input type="radio" name="NOME" value="Maison D''Hotes" />Maison
+          D'Hotes</label
+        >
+        <br />
+        <br />
+        <label><input type="radio" name="NOME" value="Club" />Club</label>
+        <br />
+        <br />
+        <label
+          ><input type="radio" name="NOME" value="B&B / Chambre d''hï¿½tes" />B&B
+          / Chambre d'hôtes</label
+        >
+        <br />
+        <br />
+        <label
+          ><input type="radio" name="NOME" value="Chambre" /> Chambre
+        </label>
+        <br />
+        <br />
+        <label
+          ><input type="radio" name="NOME" value="Chez L''Habitant" />Chez
+          L'Habitant</label
+        >
+        <br />
+        <br />
+        <label><input type="radio" name="NOME" value="Bivouac" />Bivouac</label>
+        <br />
+      </div>
+
+      <div id="JeDeguste" class="tabcontent">
+        <button class="accordion">Café et Restaurant</button>
+        <div class="panel">
+          <p>
+            <br />
+            <label
+              ><input type="radio" name="NOME" value="Cafï¿½ et thï¿½" />Café et thé
+            </label>
+            <br />
+            <br />
+            <label
+              ><input type="radio" name="NOME" value="Brunch" />Brunch
+            </label>
+            <br />
+            <br />
+            <label
+              ><input type="radio" name="NOME" value="Restaurant" />Restaurant
+            </label>
+            <br />
+            <br />
+            <label
+              ><input type="radio" name="NOME" value="Street food" />Street
+              food</label
+            >
+            <br />
+          </p>
+        </div>
+
+        <button class="accordion">Producteurs de terroir</button>
+        <div class="panel">
+          <p>
+            <br />
+            <label
+              ><input type="radio" name="NOME" value="Huile dï¿½olive" />Huile
+              d’olive
+            </label>
+            <br />
+            <br />
+            <label
+              ><input type="radio" name="NOME" value="Huile d''Argan" />Huile
+              d'Argan
+            </label>
+            <br />
+            <br />
+            <label
+              ><input type="radio" name="NOME" value="Fruits frais" />Fruits
+              frais
+            </label>
+            <br />
+            <br />
+            <label><input type="radio" name="NOME" value="Miel" />Miel </label>
+            <br />
+            <br />
+            <label
+              ><input type="radio" name="NOME" value="Légumes" />Légumes
+            </label>
+            <br />
+            <br />
+            <label
+              ><input type="radio" name="NOME" value="Fromages" />Fromages
+            </label>
+            <br />
+            <br />
+            <label
+              ><input type="radio" name="NOME" value="Viandes rouges" />Viandes
+              rouges</label
+            >
+            <br />
+
+            <br />
+            <label
+              ><input type="radio" name="NOME" value="Plantes" />Plantes
+              aromatiques et médicinales
+            </label>
+            <br />
+          </p>
+        </div>
+      </div>
+
+      <div id="JePratique" class="tabcontent">
+        <br />
+        <label><input type="radio" name="NOME" value="Surf" />Surf </label>
+        <br />
+        <br />
+        <label><input type="radio" name="NOME" value="Quad" />Quad </label>
+        <br />
+        <br />
+        <label
+          ><input type="radio" name="NOME" value="Equitation" />Equitation
+        </label>
+        <br />
+        <br />
+        <label
+          ><input type="radio" name="NOME" value="VTT" />Location de Vélo & VTT
+        </label>
+        <br />
+        <br />
+        <label
+          ><input type="radio" name="NOME" value="Randonnï¿½es" />Randonnées
+        </label>
+        <br />
+        <br />
+        <label
+          ><input
+            type="radio"
+            name="NOME"
+            value="Balades ï¿½ dromadaire"
+          />Balades à dromadaire
+        </label>
+        <br />
+      </div>
+    </div>
+    <div class="clearfix"></div>
+    <!--SIDEBAR-->
+    <div class="sticky">
+      <button id="addCql" class="button" style="vertical-align: middle">
+        <span>Filtrer</span>
+      </button>
+      <button id="reset" style="font-size: 12px">
+        <i class="fa fa-close"></i>
+      </button>
+    </div>
+
+    <script>
+      //for sidebar
+
+      function openCity(evt, cityName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+          tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+          tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(cityName).style.display = "block";
+        evt.currentTarget.className += " active";
+      }
+      document.getElementById("defaultOpen").click();
+      var acc = document.getElementsByClassName("accordion");
+      var i;
+
+      for (i = 0; i < acc.length; i++) {
+        acc[i].addEventListener("click", function () {
+          this.classList.toggle("active");
+          var panel = this.nextElementSibling;
+          if (panel.style.maxHeight) {
+            panel.style.maxHeight = null;
+          } else {
+            panel.style.maxHeight = panel.scrollHeight + "px";
+          }
+        });
+      }
+      //les baselayers
+
+      var osm = new ol.layer.Tile({
+        title: "OSM",
+        baseLayer: true,
+        source: new ol.source.OSM(),
+        preload: Infinity,
+        displayInLayerSwitcher: false,
+      });
+      var StamenTerrain = new ol.layer.Tile({
+        opacity: 1,
+        title: "Stamen Terrain",
+        baseLayer: true,
+        preload: Infinity,
+        source: new ol.source.Stamen({
+          layer: "terrain",
+        }),
+        displayInLayerSwitcher: false,
+      });
+
+      var layersSource = new ol.source.Vector({
+        url: "./vectors/layers.geojson",
+        projection: "EPSG:3857",
+        format: new ol.format.GeoJSON(),
+      });
+      var layersVector = new ol.layer.VectorImage({
+        source: layersSource,
+        style: new ol.style.Style({
+          stroke: new ol.style.Stroke({
+            color: "rgb(0,0,0,0.5)",
+            width: 3,
+          }),
+          fill: new ol.style.Fill({
+            color: "rgb(240,248,255,0.6)",
+          }),
+        }),
+        displayInLayerSwitcher: false,
+      });
+      //les layers
+      //couche vecteur "couches" pour les popups
+      var vectorSource = new ol.source.Vector({
+        url: "./vectors/layers.geojson",
+        projection: "EPSG:3857",
+        format: new ol.format.GeoJSON(),
+      });
+      var vector = new ol.layer.VectorImage({
+        name: "couches",
+        source: vectorSource,
+        style: new ol.style.Style({
+          image: new ol.style.Circle({
+            fill: new ol.style.Fill({
+              color: "transparent",
+            }),
+            stroke: new ol.style.Stroke({
+              color: "transparent",
+              width: 1.25,
+            }),
+            radius: 5,
+          }),
+        }),
+        displayInLayerSwitcher: false,
+      });
+      var communesSource = new ol.source.Vector({
+        url: "./vectors/communes.geojson",
+        projection: "EPSG:3857",
+        format: new ol.format.GeoJSON(),
+      });
+      var communesVector = new ol.layer.Vector({
+        name: "Communes",
+        source: communesSource,
+        displayInLayerSwitcher: false,
+        style: new ol.style.Style({
+          fill: new ol.style.Fill({
+            color: "transparent",
+          }),
+          stroke: new ol.style.Stroke({
+            color: "grey",
+            width: 0.5,
+          }),
+          radius: 5,
+        }),
+      });
+
+      //map
+      var url = "http://localhost:8080/geoserver/ESSAOUIRA/wms";
+      var degustation = new ol.layer.Tile({
+        source: new ol.source.TileWMS({
+          url: url,
+          params: {
+            LAYERS: "degustation",
+            TRANSPARENT: "true",
+            WIDTH: 640,
+            HEIGHT: 480,
+          },
+        }),
+        visible: false,
+        name: "Degustation",
+        preview:
+          "https://as2.ftcdn.net/jpg/02/93/79/39/500_F_293793986_P8x79zq1DJSUYaZZcVndWfGQ9hUMHN0X.jpg",
+      });
+      var produit_terroir = new ol.layer.Tile({
+        source: new ol.source.TileWMS({
+          url: url,
+          params: {
+            LAYERS: "terroir",
+            TRANSPARENT: "true",
+            WIDTH: 640,
+            HEIGHT: 480,
+          },
+        }),
+        visible: false,
+        name: "Terroir",
+        preview:
+          "https://industries.ma/wp-content/uploads/2020/03/Produits.jpg",
+      });
+      var hebergement = new ol.layer.Tile({
+        source: new ol.source.TileWMS({
+          url: url,
+          params: {
+            LAYERS: "hebergement",
+            TRANSPARENT: "true",
+            WIDTH: 640,
+            HEIGHT: 480,
+          },
+        }),
+        visible: false,
+        name: "Hebergement",
+        preview:
+          "https://img2.freepng.fr/20180424/vkq/kisspng-hotel-motel-accommodation-clip-art-university-dormitory-5adf19b9c36532.4407503615245705538004.jpg",
+      });
+
+      var sites_naturels = new ol.layer.Tile({
+        source: new ol.source.TileWMS({
+          url: url,
+          params: {
+            LAYERS: "site_naturel",
+            TRANSPARENT: "true",
+            WIDTH: 640,
+            HEIGHT: 480,
+          },
+        }),
+        visible: false,
+        name: "Sites naturels",
+        preview:
+          "https://image.freepik.com/vecteurs-libre/illustration-du-concept-tourisme-ecologique_23-2148636525.jpg",
+      });
+      var touristique = new ol.layer.Tile({
+        source: new ol.source.TileWMS({
+          url: url,
+          params: {
+            LAYERS: "touristique",
+            TRANSPARENT: "true",
+            WIDTH: 640,
+            HEIGHT: 480,
+          },
+        }),
+        visible: false,
+        name: "Touristiques",
+        preview:
+          "https://www.medias24.com/photos_articles/big/07-08-2020/tourismeessaouira0.jpg",
+      });
+      var historique = new ol.layer.Tile({
+        source: new ol.source.TileWMS({
+          url: url,
+          params: {
+            LAYERS: "historiq",
+            TRANSPARENT: "true",
+            WIDTH: 640,
+            HEIGHT: 480,
+          },
+        }),
+        visible: false,
+        name: "Historiques",
+        preview:
+          "https://image.freepik.com/vecteurs-libre/ensemble-points-repere-mondiaux_1284-13903.jpg",
+      });
+      var culturel = new ol.layer.Tile({
+        source: new ol.source.TileWMS({
+          url: url,
+          params: {
+            LAYERS: "culturel",
+            TRANSPARENT: "true",
+            WIDTH: 640,
+            HEIGHT: 480,
+          },
+        }),
+        visible: false,
+        name: "Culturels",
+        preview:
+          "https://image.freepik.com/vecteurs-libre/danseuse-balinaise-barongs_175624-3.jpg",
+      });
+      
+      var activite = new ol.layer.Tile({
+        source: new ol.source.TileWMS({
+          url: url,
+          params: {
+            LAYERS: "activv",
+            TRANSPARENT: "true",
+            WIDTH: 640,
+            HEIGHT: 480,
+          },
+        }),
+        visible: false,
+        name: "Activité",
+        preview:
+          "https://image.freepik.com/vecteurs-libre/gens-qui-font-sports-ete_23-2148626870.jpg",
+      });
+      var prov_es = new ol.layer.Tile({
+        source: new ol.source.TileWMS({
+          url: url,
+          params: {
+            LAYERS: "ext_prov",
+            TRANSPARENT: "true",
+            WIDTH: 640,
+            HEIGHT: 480,
+          },
+        }),
+        displayInLayerSwitcher: false,
+      });
+      var map = new ol.Map({
+        target: "js-map",
+        controls:  ol.control.defaults().extend([
+          new ol.control.ScaleLine(),
+
+          new ol.control.MousePosition(),
+          new ol.control.ZoomToExtent({
+            extent: [-1200025.95, 3592700.241, -909999.709, 3819000.35],
+          }),
+        ]),
+        layers: [
+          osm,
+          StamenTerrain,
+          layersVector,
+          vector,
+          degustation,
+          produit_terroir,
+          hebergement,
+          sites_naturels,
+          touristique,
+          historique,
+          culturel,
+          activite,
+          prov_es,
+          communesVector,
+        ],
+        loadTilesWhileAnimating: true,
+        interactions: ol.interaction.defaults({
+          altShiftDragRotate: false,
+          pinchRotate: false,
+        }),
+        view: new ol.View({
+          center: ol.proj.transform([-9.3, 31.5], "EPSG:4326", "EPSG:3857"),
+          zoom: 8.7,
+        }),
+      });
+
+
+      var lyrswitcher = new ol.control.LayerSwitcherImage();
+      // lyrswitcher.setTarget(document.getElementById("layerswitcher"));
+      //layerswitcherimage
+      map.addControl(lyrswitcher);
+      //swipe control for baselayers
+      // Control
+      var ctrl = new ol.control.Swipe({
+        position: 0.5025,
+      });
+      map.addControl(ctrl);
+      // Set stamen on left
+      ctrl.addLayer(StamenTerrain);
+      // OSM on right
+      ctrl.addLayer(osm, true);
+      //locate me
+      //geolocation
+      const source = new ol.source.Vector();
+      const layer = new ol.layer.Vector({
+        source: source,
+        displayInLayerSwitcher: false,
+      });
+      map.addLayer(layer);
+
+      navigator.geolocation.watchPosition(
+        function (pos) {
+          const coords = [pos.coords.longitude, pos.coords.latitude];
+          const accuracy = ol.geom.Polygon.circular(
+            coords,
+            pos.coords.accuracy
+          );
+          source.clear(true);
+          source.addFeatures([
+            new ol.Feature(
+              accuracy.transform("EPSG:4326", map.getView().getProjection())
+            ),
+            new ol.Feature(new ol.geom.Point(ol.proj.fromLonLat(coords))),
+          ]);
+        },
+        function (error) {
+          alert(`ERROR: ${error.message}`);
+        },
+        {
+          enableHighAccuracy: true,
+        }
+      );
+
+      const locate = document.createElement("div");
+      locate.className = "ol-control ol-unselectable locate";
+      locate.innerHTML = '<button title="Locate me">◎</button>';
+      locate.addEventListener("click", function () {
+        if (!source.isEmpty()) {
+          map.getView().fit(source.getExtent(), {
+            maxZoom: 8,
+            duration: 500,
+          });
+        }
+      });
+      map.addControl(
+        new ol.control.Control({
+          element: locate,
+        })
+      );
+      //for menu popup
+      // Overlay
+      var menu = new ol.control.Overlay({
+        closeBox: true,
+        className: "slide-left menu",
+        content: $("#menu").get(0),
+      });
+      map.addControl(menu);
+      // A toggle control to show/hide the menu
+      var t = new ol.control.Toggle({
+        html: '<i class="fa fa-bars" ></i>',
+        className: "menu",
+        title: "Menu",
+        active: true,
+        onToggle: function () {
+          menu.toggle();
+        },
+      });
+      map.addControl(t);
+      // GeoJSON layer
+      var vectorSource = new ol.source.Vector({
+        url: "./vectors/layers.geojson",
+        projection: "EPSG:3857",
+        format: new ol.format.GeoJSON(),
+
+        logo:
+          "https://www.data.gouv.fr/s/avatars/37/e56718abd4465985ddde68b33be1ef.jpg",
+      });
+
+      map.addLayer(
+        new ol.layer.Vector({
+          name: "Layers",
+          source: vectorSource,
+          displayInLayerSwitcher: false,
+          style: new ol.style.Style({
+            image: new ol.style.Circle({
+              fill: new ol.style.Fill({
+                color: "transparent",
+              }),
+              stroke: new ol.style.Stroke({
+                color: "transparent",
+                width: 1.25,
+              }),
+              radius: 5,
+            }),
+          }),
+        })
+      );
+      // Control Select
+
+      var select = new ol.interaction.Select();
+      map.addInteraction(select);
+
+      select.getFeatures().on("add", function (e) {
+        menu.show();
+        var feature = e.element;
+        var img = $("<img>").attr("src", feature.get("img"));
+        var separateur = ":";
+        var info0 = $("<span>").append(
+          $("<span>").text(feature.get("Categories"))
+        );
+        var info1 = $("<span>").append($("<span>").text(feature.get("Venues")));
+        var info2 = $("<span>").append($("<span>").text(feature.get("NOM")));
+        var info3 = $("<span>").append(
+          $("<span>").text(feature.get("Commune"))
+        );
+        var info4 = $("<span>").append(
+          $("<span>").text(feature.get("Nom responsable"))
+        );
+        var info5 = $("<span>").append(
+          $("<span>").text(feature.get("Numï¿½ro de tï¿½l"))
+        );
+        $(".NOM").html(info2);
+        $(".categorie").html(info0).append(" : ");
+        $(".venue")
+          .html(info1)
+          .append($("<br>"))
+          .append($("<span>").text("Commune : "))
+          .append($(".commune").html(info3))
+          .append($("<br>"))
+          .append($("<span>").text("Nom responsable : "))
+          .append($(".responsable").html(info4))
+          .append($("<br>"))
+          .append($("<span>").text("Numéro de tel : "))
+          .append($(".num").html(info5));
+
+        /*var content = $("<span>").append(info4).append(info5);
+                     $(".data").html(content);*/
+      });
+      select.getFeatures().on("remove", function (e) {
+        $(".data").html("");
+      });
+      //cqlfilter
+      var CQLcouches = new ol.layer.Tile({
+        source: new ol.source.TileWMS({
+          url: url,
+          params: {
+            LAYERS: "all-layers",
+            TRANSPARENT: "true",
+          },
+        }),
+        displayInLayerSwitcher: false,
+      });
+
+      function elastic(t) {
+        return (
+          Math.pow(2, -10 * t) * Math.sin(((t - 0.075) * (2 * Math.PI)) / 0.3) +
+          1
+        );
+      }
+      function onClick(id, callback) {
+        document.getElementById(id).addEventListener("click", callback);
+      }
+      var notification = new ol.control.Notification({
+    });
+      onClick("addCql", function () {
+        map.getView().animate({
+          center: ol.proj.transform([-9.5, 31.5], "EPSG:4326", "EPSG:3857"),
+          zoom: 9.6,
+          duration: 2000,
+          easing: elastic,
+        });
+        var ITEM = document.querySelector('input[name="NOME"]:checked').value;
+        UnavailableItems=["Montagne","Forêt","Moussem","Festival","Sites","Refuge","Ecogîtes","Club",
+        "Chez L''Habitant","Bivouac","Brunch","Street Food","Fruits Frais","Miel","Légumes","Fromages",
+        "Viandes rouges","Plantes","VTT"];
+        if (UnavailableItems.includes(ITEM)){
+          var div = $('<div style="  font-size:17px; font-family:"Comic Sans MS">').text('Oups! Les résultats de votre recherche ne sont pas diponibles pour le moment :)');
+            notification.show(div.get(0));
+            // Control
+		
+		map.addControl(notification);
+        }
+        var CQLFilter = "Venues=" + "'" + ITEM + "'";
+        CQLcouches.setVisible(true);
+        CQLcouches.getSource().updateParams({ CQL_FILTER: CQLFilter });
+        map.addLayer(CQLcouches);
+      });
+
+      onClick("reset", function () {
+        
+        map.getView().animate({
+          center: ol.proj.transform([-9.5, 31.5], "EPSG:4326", "EPSG:3857"),
+          zoom: 8.9,
+          duration: 2000,
+          easing: elastic,
+        });
+        CQLcouches.setVisible(false);
+        menu.hide();
+
+      });
+
+      var dragBox = new ol.interaction.DragBox();
+      dragBox.on("boxend", function (evt) {
+        map.getView().fit(dragBox.getGeometry().getExtent(), map.getSize());
+      });
+      var pan = new ol.interaction.DragPan({
+        onFocusOnly: true,
+      });
+      map.addInteraction(pan);
+      const dragB = document.createElement("div");
+      dragB.className = "ol-control ol-unselectable dragB";
+      dragB.innerHTML = '<button title="Zoom Box"><i class="fa fa-search-plus" style="font-size:16px"></i></i></button>';
+      dragB.addEventListener("click", function () {
+        dragBox.setActive(true);
+      map.addInteraction(dragBox);
+      });
+      map.addControl(
+        new ol.control.Control({
+          element: dragB,
+        })
+      );
+const panB = document.createElement("div");
+      panB.className = "ol-control ol-unselectable panB";
+      panB.innerHTML = '<button title="Pan"><i class="fa fa-arrows" style="font-size:16px"></i></button>';
+      panB.addEventListener("click", function () {
+        dragBox.setActive(false);
+       pan.setActive(true);
+      });
+      map.addControl(
+        new ol.control.Control({
+          element: panB,
+        })
+      );
+ 
+      var search = new ol.control.SearchFeature({
+        target: $(".options").get(0),
+        source: layersSource,
+        property: $(".options select").val(),
+      });
+      map.addControl(search);
+
+      // Select feature when click on the reference index
+      search.on("select", function (e) {
+        select.getFeatures().clear();
+        select.getFeatures().push(e.search);
+        var p = e.search.getGeometry().getFirstCoordinate();
+        map.getView().animate({ center: p });
+      });
+    </script>
+  </body>
+</html>
